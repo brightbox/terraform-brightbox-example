@@ -11,6 +11,7 @@ resource "brightbox_server" "webserver" {
   image = "img-8pcus"
   name = "web server"
   server_groups = ["${brightbox_server_group.webservers.id}"]
+  depends_on = ["brightbox_firewall_policy.webservers"]
 }
 
 resource "brightbox_server_group" "webservers" {
