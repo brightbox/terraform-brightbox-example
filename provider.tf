@@ -4,7 +4,9 @@
 // BRIGHTBOX_PASSWORD
 
 provider "brightbox" {
-#  account  = ""
-#  username = ""
-#  password = ""
+  version = "~> 1.0"
+
+  #  account  = ""
+  #  username = ""
+  #  password = ""
 }
