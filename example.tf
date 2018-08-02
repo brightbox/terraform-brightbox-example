@@ -2,14 +2,23 @@
 // Builds a Web server and a MySQL server, gives them both Cloud IPs and sets up firewalling.
 // See https://www.brightbox.com/docs/guides/terraform/getting-started for more details
 
+
+data "brightbox_image" "webserver" {
+  name        = "${var.image_desc}"
+  arch        = "x86_64"
+  official    = true
+  most_recent = true
+}
+
 resource "brightbox_cloudip" "webip" {
   target = "${brightbox_server.webserver.interface}"
   name = "web ip"
 }
 
 resource "brightbox_server" "webserver" {
-  image = "${var.image_id}"
   name = "web server"
+  image = "${data.brightbox_image.webserver.id}"
+  type  = "${var.webserver_type}"
   server_groups = ["${brightbox_server_group.webservers.id}"]
   depends_on = ["brightbox_firewall_policy.webservers"]
 }
