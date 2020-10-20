@@ -10,16 +10,16 @@ data "brightbox_image" "webserver" {
 }
 
 resource "brightbox_cloudip" "webip" {
-  target = "${brightbox_server.webserver.interface}"
+  target = brightbox_server.webserver.interface
   name   = "web ip"
 }
 
 resource "brightbox_server" "webserver" {
   name          = "web server"
-  image         = "${data.brightbox_image.webserver.id}"
-  type          = "${var.webserver_type}"
-  server_groups = ["${brightbox_server_group.webservers.id}"]
-  depends_on    = ["brightbox_firewall_policy.webservers"]
+  image         = data.brightbox_image.webserver.id
+  type          = var.webserver_type
+  server_groups = [brightbox_server_group.webservers.id]
+  depends_on    = [brightbox_firewall_policy.webservers]
 }
 
 resource "brightbox_server_group" "webservers" {
@@ -27,22 +27,22 @@ resource "brightbox_server_group" "webservers" {
 }
 
 resource "brightbox_cloudip" "db" {
-  target = "${brightbox_database_server.db.id}"
+  target = brightbox_database_server.db.id
   name   = "db ip"
 }
 
 resource "brightbox_database_server" "db" {
   name                = "db server"
   database_engine     = "mysql"
-  database_version    = "5.6"
+  database_version    = "8.0"
   maintenance_weekday = 6
   maintenance_hour    = 2
-  allow_access        = ["${brightbox_server_group.webservers.id}"]
+  allow_access        = [brightbox_server_group.webservers.id]
 }
 
 resource "brightbox_firewall_policy" "webservers" {
   name         = "web servers"
-  server_group = "${brightbox_server_group.webservers.id}"
+  server_group = brightbox_server_group.webservers.id
 }
 
 resource "brightbox_firewall_rule" "webservers_ssh" {
@@ -50,7 +50,7 @@ resource "brightbox_firewall_rule" "webservers_ssh" {
   protocol         = "tcp"
   source           = "any"
   description      = "SSH access from anywhere"
-  firewall_policy  = "${brightbox_firewall_policy.webservers.id}"
+  firewall_policy  = brightbox_firewall_policy.webservers.id
 }
 
 resource "brightbox_firewall_rule" "webservers_web" {
@@ -58,11 +58,11 @@ resource "brightbox_firewall_rule" "webservers_web" {
   protocol         = "tcp"
   source           = "any"
   description      = "HTTP/S access from anywhere"
-  firewall_policy  = "${brightbox_firewall_policy.webservers.id}"
+  firewall_policy  = brightbox_firewall_policy.webservers.id
 }
 
 resource "brightbox_firewall_rule" "webservers_outbound" {
   destination     = "any"
   description     = "Outbound internet access"
-  firewall_policy = "${brightbox_firewall_policy.webservers.id}"
+  firewall_policy = brightbox_firewall_policy.webservers.id
 }

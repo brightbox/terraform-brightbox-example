@@ -6,7 +6,7 @@
 provider "brightbox" {
   version = "~> 1.0"
 
-  #  account  = ""
-  #  username = ""
-  #  password = ""
+  username  = var.username
+  password  = var.password
+  account   = var.account
 }
