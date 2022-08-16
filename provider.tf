@@ -4,8 +4,6 @@
 // BRIGHTBOX_PASSWORD
 
 provider "brightbox" {
-  version = "~> 1.0"
-
   username  = var.username
   password  = var.password
   account   = var.account
