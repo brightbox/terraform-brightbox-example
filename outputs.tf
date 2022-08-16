@@ -8,4 +8,5 @@ output "db_ip_address" {
 
 output "db_admin_account_password" {
   value = brightbox_database_server.db.admin_password
+  sensitive = true
 }
